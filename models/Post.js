@@ -6,6 +6,9 @@ const PostSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    mapId: {
+      type: String,
+    },
     title: {
       type: String,
       max: 200,
