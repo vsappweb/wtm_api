@@ -32,6 +32,13 @@ const MapSchema = new mongoose.Schema(
     asn: {
       type: String,
     },
+    nameOfMap: {
+      type: String,
+    },
+    canBeDeleted: {
+      type: Boolean,
+      default: false,
+    },
     dateCreated: {
       type: Date,
       default: Date.now,
