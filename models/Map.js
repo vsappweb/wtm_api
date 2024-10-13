@@ -39,6 +39,10 @@ const MapSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    createByUser: {
+      type: Boolean,
+      default: false,
+    },
     dateCreated: {
       type: Date,
       default: Date.now,
