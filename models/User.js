@@ -34,8 +34,9 @@ const UserSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    inGroup: {
-      type: String,
+    followers: {
+      type: Array,
+      default: [],
     },
     isAdmin: {
       type: Boolean,
@@ -63,20 +64,25 @@ const UserSchema = new mongoose.Schema(
     ghostname: {
       type: String,
     },
-    membershipAdmin: {
-      type: String,
+    inGroup: {
+      type: Boolean,
+      default: false,
+    },
+    groupAdmin: {
+      type: Array,
+      default: [],
+    },
+    groupName: {
+      type: Array,
+      default: [],
     },
     membershipGroup: {
       type: Array,
       default: [],
     },
-    membershipRole: {
-      type: Number,
-      enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-    },
     membershipDate: {
-      
-      type: Date,
+      type: Array,
+      default: [],
     },
     ghostMemberships: {
       type: Array,

@@ -93,7 +93,7 @@ router.get("/friends/:userId", async (req, res) => {
 });
 
 //follow user
-router.put("/:id/follow", async (req, res) => {
+router.put("/:id/addToGroup", async (req, res) => {
   if (req.body.userId !== req.params.id) {
     try {
       const user = await User.findById(req.params.id);
@@ -114,7 +114,7 @@ router.put("/:id/follow", async (req, res) => {
 });
 
 //unfollow user
-router.put("/:id/unfollow", async (req, res) => {
+router.put("/:id/deleteFromGroup", async (req, res) => {
   if (req.body.userId !== req.params.id) {
     try {
       const user = await User.findById(req.params.id);
