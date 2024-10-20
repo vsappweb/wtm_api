@@ -97,33 +97,29 @@ router.get("/allGroups", async (req, res) => {
   }
 });
 
-// get timeline groups
-// router.get("/timeline/:userId", async (req, res) => {
-//   try {
-//     const currentUser = await User.findById(req.params.userId);
-//     const userGroups = await Group.find({ userId: currentUser._id });
-//     const friendGroups = await Promise.all(
-//       currentUser.followings.map((friendId) => {
-//         return Group.find({ userId: friendId });
-//       })
-//     );
-//     res.status(200).json(userGroups.concat(...friendGroups));
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
-
-// get user's all groups
-// router.get("/profile/:personnelnumber", async (req, res) => {
-//   try {
-//     const user = await User.findOne({
-//       personnelnumber: req.params.personnelnumber,
-//     });
-//     const groups = await Group.find({ userId: user._id });
-//     res.status(200).json(groups);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+//DELETE ONE MEMBER
+router.delete("/:id/member/delete", async (req, res) => {
+  try {
+    const group = await Group.findById(req.params.id);
+    if (!group) {
+      return res.status(404).json("Group not found");
+    }
+    const memberIndex = group.membersOfGroup.findIndex(
+      (member) => member === req.body.membersOfGroup
+    );
+    if (memberIndex === -1) {
+      return res.status(404).json(group.membersOfGroup);
+    }
+    group.membersOfGroup.splice(memberIndex, 1);
+    await group.save();
+    res.status(200).json("Member has been deleted...");
+    if (group.membersOfGroup.length === 0) {
+      await Group.findByIdAndDelete(req.params.id);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;
