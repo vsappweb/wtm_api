@@ -12,6 +12,7 @@ const cityRoute = require("./routes/cities");
 const regionRoute = require("./routes/regions");
 const mapRoute = require("./routes/maps");
 const placeRoute = require("./routes/places");
+const groupRoute = require("./routes/groups");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
@@ -71,6 +72,7 @@ app.use("/api/cities", cityRoute);
 app.use("/api/regions", regionRoute);
 app.use("/api/maps", mapRoute);
 app.use("/api/places", placeRoute);
+app.use("/api/groups", groupRoute);
 
 app.get("", (req, res) => {
   res.send("Backend server is running!!!");
