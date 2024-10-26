@@ -43,6 +43,10 @@ const MapSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    likes: {
+      type: Array,
+      default: [],
+    },
     dateCreated: {
       type: Date,
       default: Date.now,

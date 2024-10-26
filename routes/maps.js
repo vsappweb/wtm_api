@@ -48,7 +48,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-//DELETE ONE PICTURE
+//DELETE COORDINATE
 router.delete("/:id/coordinate/delete", async (req, res) => {
   try {
     const map = await Map.findById(req.params.id);
@@ -66,6 +66,23 @@ router.delete("/:id/coordinate/delete", async (req, res) => {
     res.status(200).json("Coordinate has been deleted...");
   } catch (err) {
     console.error(err);
+    res.status(500).json(err);
+  }
+});
+
+
+// LIKE A MAP, DISLIKE A MAP
+router.put("/:id/like", async (req, res) => {
+  try {
+    const map = await Map.findById(req.params.id);
+    if (!map.likes.includes(req.body.userId)) {
+      await map.updateOne({ $push: { likes: req.body.userId } });
+      res.status(200).json("The map has been liked");
+    } else {
+      await map.updateOne({ $pull: { likes: req.body.userId } });
+      res.status(200).json("The map has been disliked");
+    }
+  } catch (err) {
     res.status(500).json(err);
   }
 });
