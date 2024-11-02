@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    coverPicture: {
+    profilePictureOld: {
       type: String,
       default: "",
     },
