@@ -55,8 +55,28 @@ const storage = multer.diskStorage({
   },
 });
 
+const storageAvatar = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images/person/usersAvatars");
+  },
+  filename: (req, file, cb) => {
+    // cb(null, file.originalname);
+    cb(null, req.body.name);
+  },
+});
+
 const upload = multer({ storage: storage });
+const uploadAvatar = multer({ storage: storageAvatar });
+
+
 app.post("/api/upload", upload.any("file"), (req, res) => {
+  try {
+    return res.status(200).json("File uploaded successfully.");
+  } catch (err) {
+    console.log(err);
+  }
+});
+app.post("/api/upload/userAvatar", uploadAvatar.any("file"), (req, res) => {
   try {
     return res.status(200).json("File uploaded successfully.");
   } catch (err) {
@@ -75,7 +95,7 @@ app.use("/api/places", placeRoute);
 app.use("/api/groups", groupRoute);
 
 app.get("", (req, res) => {
-  res.send("Backend server is running!!!");
+  res.send("WTM server is running!!!");
 });
 
 app.listen(8800, () => {
