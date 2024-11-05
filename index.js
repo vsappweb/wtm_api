@@ -137,6 +137,8 @@ app.post("/api/upload/city", uploadCity.any("file"), (req, res) => {
   }
 });
 
+
+
 app.use("/api/users", userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/posts", postRoute);

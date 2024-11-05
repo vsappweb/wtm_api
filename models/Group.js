@@ -12,6 +12,9 @@ const GroupSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    pinsColor: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
