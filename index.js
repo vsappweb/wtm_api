@@ -13,6 +13,7 @@ const regionRoute = require("./routes/regions");
 const mapRoute = require("./routes/maps");
 const placeRoute = require("./routes/places");
 const groupRoute = require("./routes/groups");
+const deleteImg = require("./routes/deleteImg");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
@@ -148,6 +149,7 @@ app.use("/api/regions", regionRoute);
 app.use("/api/maps", mapRoute);
 app.use("/api/places", placeRoute);
 app.use("/api/groups", groupRoute);
+app.use("/api/deleteImg", deleteImg);
 
 app.get("", (req, res) => {
   res.send("WTM server is running!!!");
