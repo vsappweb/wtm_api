@@ -17,6 +17,7 @@ const deleteImg = require("./routes/deleteImg");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+// const sharp = require("sharp");
 
 dotenv.config();
 
@@ -102,6 +103,8 @@ const uploadCountry = multer({ storage: storageCountry });
 const uploadRegion = multer({ storage: storageRegion });
 const uploadCity = multer({ storage: storageCity });
 
+
+
 app.post("/api/upload", upload.any("file"), (req, res) => {
   try {
     return res.status(200).json("File uploaded successfully.");
@@ -123,13 +126,32 @@ app.post("/api/upload/country", uploadCountry.any("file"), (req, res) => {
     console.log(err);
   }
 });
-app.post("/api/upload/region", uploadRegion.any("file"), (req, res) => {
+
+app.post("/api/upload/region", uploadRegion.any("file"), async (req, res) => {
   try {
     return res.status(200).json("File uploaded successfully.");
   } catch (err) {
     console.log(err);
   }
+  // if (!req.file || !req.file.buffer) {
+  //   return res.status(400).json("No file uploaded");
+  // }
+
+  // try {
+  //   const image = sharp(req.file.buffer);
+  //   const data = await image.jpeg({ mozjpeg: true }).toBuffer();
+  //   const base64Encoded = data.toString("base64");
+  //   const url = `data:image/jpeg;base64,${base64Encoded}`;
+  //   console.log("url", url);
+  //   res.status(200).send({ data: url });
+    
+  // } catch (err) {
+  //   console.error("Error processing image upload:", err);
+  //   res.status(500).json("Internal Server Error");
+  // }
 });
+
+
 app.post("/api/upload/city", uploadCity.any("file"), (req, res) => {
   try {
     return res.status(200).json("File uploaded successfully.");
