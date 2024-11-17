@@ -49,17 +49,17 @@ app.use(
 // });
 
 
-app.use("/api/users", userRoute);
-app.use("/api/auth", authRoute);
-app.use("/api/posts", postRoute);
-app.use("/api/countries", countryRoute);
-app.use("/api/cities", cityRoute);
-app.use("/api/regions", regionRoute);
-app.use("/api/maps", mapRoute);
-app.use("/api/places", placeRoute);
-app.use("/api/groups", groupRoute);
-app.use("/api/deleteImg", deleteImg);
-app.use("/api/uploadImg", uploadImg);
+app.use("/api/v1/users", userRoute);
+app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/posts", postRoute);
+app.use("/api/v1/countries", countryRoute);
+app.use("/api/v1/cities", cityRoute);
+app.use("/api/v1/regions", regionRoute);
+app.use("/api/v1/maps", mapRoute);
+app.use("/api/v1/places", placeRoute);
+app.use("/api/v1/groups", groupRoute);
+app.use("/api/v1/deleteImg", deleteImg);
+app.use("/api/v1/uploadImg", uploadImg);
 
 app.get("", (req, res) => {
   res.send("WTM server is running!!!");
