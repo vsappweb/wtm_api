@@ -21,6 +21,7 @@ const fs = require("fs");
 const util = require("util");
 const path = require("path");
 const cors = require("cors");
+const port = process.env.PORT || 8800;
 
 dotenv.config();
 
@@ -64,12 +65,12 @@ app.use("/api/v1/uploadImg", uploadImg);
 app.use("/api/v1/favorites", favoriteRoute);
 
 app.get("", (req, res) => {
-  res.send(`Welcome to WTM ${process.env.NODE_ENV_LOG} server is running!!!`);
-  console.log(`Now >>>`, process.env.NODE_ENV_LOG);
+  res.send(`Welcome to WTM ${process.env.NODE_ENV_LOG} server!!!`);
+  console.log(`Welcome to WTM ${process.env.NODE_ENV_LOG} server!!!`);
 });
 
-app.listen(8800, () => {
-  console.log("Backend server is running!!!");
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}!!!`);
 });
 
 if (process.env.NODE_ENV_LOG === "production") {
