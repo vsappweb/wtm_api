@@ -15,7 +15,10 @@ const placeRoute = require("./routes/places");
 const groupRoute = require("./routes/groups");
 const deleteImg = require("./routes/deleteImg");
 const uploadImg = require("./routes/uploadImg");
+const favoriteRoute = require("./routes/favorites");
 
+const fs = require("fs");
+const util = require("util");
 const path = require("path");
 const cors = require("cors");
 
@@ -30,7 +33,6 @@ try {
 }
 
 app.use("/images", express.static(path.join(__dirname, "public/images")));
-
 
 // middleware
 app.use(cors());
@@ -48,7 +50,6 @@ app.use(
 //     res.send("Welcome to user page!")
 // });
 
-
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/posts", postRoute);
@@ -60,11 +61,35 @@ app.use("/api/v1/places", placeRoute);
 app.use("/api/v1/groups", groupRoute);
 app.use("/api/v1/deleteImg", deleteImg);
 app.use("/api/v1/uploadImg", uploadImg);
+app.use("/api/v1/favorites", favoriteRoute);
 
 app.get("", (req, res) => {
-  res.send("WTM server is running!!!");
+  res.send(`Welcome to WTM ${process.env.NODE_ENV_LOG} server is running!!!`);
+  console.log(`Now >>>`, process.env.NODE_ENV_LOG);
 });
 
 app.listen(8800, () => {
   console.log("Backend server is running!!!");
 });
+
+if (process.env.NODE_ENV_LOG === "production") {
+  console.log("production");
+} else {
+  console.log("development");
+  try {
+    const log_file = fs.createWriteStream(__dirname + "/debug.log", {
+      flags: "w",
+    });
+    const log_stdout = process.stdout;
+
+    console.log = function (...args) {
+      const output = args.join(" ");
+      if (log_file && log_stdout) {
+        log_file.write(util.format(output) + "\r\n");
+        log_stdout.write(util.format(output) + "\r\n");
+      }
+    };
+  } catch (err) {
+    console.error("Error in setting up logging:", err);
+  }
+}

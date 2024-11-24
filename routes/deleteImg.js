@@ -2,6 +2,7 @@ const router = require("express").Router();
 const fs = require("fs");
 const path = require("path");
 
+// DELETE FILE 
 router.delete("/:filename", (req, res) => {
   const filename = req.params.filename;
   const dirPath= req.body.dirPath;

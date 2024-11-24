@@ -5,6 +5,7 @@ const sharp = require("sharp");
 const fs = require("fs");
 const { exec } = require("child_process");
 
+// STORAGE
 const storage = (folder) =>
   multer.diskStorage({
     destination: (req, file, cb) => {
@@ -19,6 +20,7 @@ const storage = (folder) =>
     },
   });
 
+// UPLOAD
 const upload = multer({ storage: storage("temp") });
 const uploadAvatar = multer({ storage: storage("person/usersAvatars/temp") });
 const uploadCountry = multer({ storage: storage("slider/countries/temp") });
@@ -26,6 +28,7 @@ const uploadRegion = multer({ storage: storage("slider/regions/temp") });
 const uploadCity = multer({ storage: storage("slider/cities/temp") });
 const uploadNote = multer({ storage: storage("post/notes/temp") });
 
+// OPTIMIZE
 const optimizeImage = (imagePath) => {
   const reqFile = imagePath;
   console.log("reqFile >>>", reqFile);
@@ -42,51 +45,108 @@ const optimizeImage = (imagePath) => {
     __dirname,
     `../${dist}/${reqFile.filename}`
   );
-  sharp(reqFile.path)
-    .resize(800, 600)
-    .toFile(compressedImageFilePath)
-    .then(() => {
-      let sizeBeforeCompression, sizeAfterCompression;
-      const sizeBeforeCompressionCommand = `du -h ${reqFile.path}`;
-      const sizeAfterCompressionCommand = `du -h ${compressedImageFilePath}`;
+  if (reqFile.mimetype === "image/jpeg") {
+    console.log("File type >>>", reqFile.mimetype);
+    sharp(reqFile.path, { failOnError: false })
+      .resize(800, 600)
+      // .withMetadata()
+      .toFile(compressedImageFilePath)
+      .then(() => {
+        let sizeBeforeCompression, sizeAfterCompression;
+        const sizeBeforeCompressionCommand = `du -h ${reqFile.path}`;
+        const sizeAfterCompressionCommand = `du -h ${compressedImageFilePath}`;
 
-      exec(sizeBeforeCompressionCommand, (err, stdout, stderr) => {
-        if (err) {
-          console.error("Error getting file size: ", err.message);
-          return;
-        }
-        sizeBeforeCompression = stdout.trim().split("\t")[0];
-
-        exec(sizeAfterCompressionCommand, (err, stdout, stderr) => {
+        exec(sizeBeforeCompressionCommand, (err, stdout, stderr) => {
           if (err) {
             console.error("Error getting file size: ", err.message);
             return;
           }
-          sizeAfterCompression = stdout.trim().split("\t")[0];
-          console.log(
-            `Size before compression: ${sizeBeforeCompression}, size after compression: ${sizeAfterCompression}`
-          );
+          sizeBeforeCompression = stdout.trim().split("\t")[0];
+
+          exec(sizeAfterCompressionCommand, (err, stdout, stderr) => {
+            if (err) {
+              console.error("Error getting file size: ", err.message);
+              return;
+            }
+            sizeAfterCompression = stdout.trim().split("\t")[0];
+            console.log(
+              `Size before compression: ${sizeBeforeCompression}, size after compression: ${sizeAfterCompression}`
+            );
+          });
+          sharp.cache({ files: 0 });
+          sharp.cache(false);
+          if (fs.existsSync(reqFile.path)) {
+            console.log("Removing file from temporary folder");
+            fs.unlinkSync(reqFile.path);
+            console.log("File removed from temporary folder");
+          } else {
+            console.log(`File not found: ${reqFile.path}`);
+          }
         });
-        sharp.cache({ files: 0 });
-        sharp.cache(false);
-        if (fs.existsSync(reqFile.path)) {
-          console.log("Removing file from temporary folder");
-          fs.unlinkSync(reqFile.path);
-          console.log("File removed from temporary folder");
-        } else {
-          console.log(`File not found: ${reqFile.path}`);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.name === "SharpError") {
+          return res.status(400).send("Error processing image: " + err.message);
         }
+        return res.status(500).send("Error uploading image: " + err.message);
       });
-    })
-    .catch((err) => {
-      console.error(err);
-      if (err.name === "SharpError") {
-        return res.status(400).send("Error processing image: " + err.message);
-      }
-      return res.status(500).send("Error uploading image: " + err.message);
-    });
+  } else if (reqFile.mimetype === "image/png") {
+    console.log("File type >>>", reqFile.mimetype);
+    sharp(reqFile.path, { failOnError: false })
+      .resize(800, 600)
+      .png({
+        compressionLevel: 9,
+        // quality: 80,
+        adaptiveFiltering: true,
+        force: true,
+      })
+      // .withMetadata()
+      .toFile(compressedImageFilePath)
+      .then(() => {
+        let sizeBeforeCompression, sizeAfterCompression;
+        const sizeBeforeCompressionCommand = `du -h ${reqFile.path}`;
+        const sizeAfterCompressionCommand = `du -h ${compressedImageFilePath}`;
+
+        exec(sizeBeforeCompressionCommand, (err, stdout, stderr) => {
+          if (err) {
+            console.error("Error getting file size: ", err.message);
+            return;
+          }
+          sizeBeforeCompression = stdout.trim().split("\t")[0];
+
+          exec(sizeAfterCompressionCommand, (err, stdout, stderr) => {
+            if (err) {
+              console.error("Error getting file size: ", err.message);
+              return;
+            }
+            sizeAfterCompression = stdout.trim().split("\t")[0];
+            console.log(
+              `Size before compression: ${sizeBeforeCompression}, size after compression: ${sizeAfterCompression}`
+            );
+          });
+          sharp.cache({ files: 0 });
+          sharp.cache(false);
+          if (fs.existsSync(reqFile.path)) {
+            console.log("Removing file from temporary folder");
+            fs.unlinkSync(reqFile.path);
+            console.log("File removed from temporary folder");
+          } else {
+            console.log(`File not found: ${reqFile.path}`);
+          }
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.name === "SharpError") {
+          return res.status(400).send("Error processing image: " + err.message);
+        }
+        return res.status(500).send("Error uploading image: " + err.message);
+      });
+  }
 };
 
+// HANDLE UPLOAD
 const handleUpload = (uploadFn) => (req, res) => {
   try {
     uploadFn(req, res, (err) => {
@@ -111,6 +171,7 @@ const handleUpload = (uploadFn) => (req, res) => {
   }
 };
 
+// ROUTES
 router.post("/upload", handleUpload(upload.single("file")));
 router.post("/userAvatar", handleUpload(uploadAvatar.single("file")));
 router.post("/country", handleUpload(uploadCountry.single("file")));
