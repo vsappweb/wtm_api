@@ -122,4 +122,30 @@ router.delete("/:id/member/delete", async (req, res) => {
   }
 });
 
+//GET USER GROUPS BY ID
+router.get("/", async (req, res) => {
+  const userId = req.query.userId;
+  if (!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const groups = await Group.find({ membersOfGroup: userId });
+    if (!groups) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+    const groupList = groups.map((group) => {
+      const { _id, groupName, groupAdmin, membersOfGroup, pinsColor, createdAt } = group;
+      return { _id, groupName, groupAdmin, membersOfGroup, pinsColor, createdAt };
+    });
+    res.status(200).json(groupList);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 module.exports = router;

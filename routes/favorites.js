@@ -88,5 +88,24 @@ router.get("/allFavorites", async (req, res) => {
   }
 });
 
+//get a favorite by id and userId 
+router.get("/", async (req, res) => {
+  const userId = req.query.userId;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const favorite = await Favorite.findOne({ userId: user._id });
+    if (!favorite) {
+      return res.status(404).json({ message: "Favorite not found" });
+    }
+    const { updatedAt, createdAt, ...other } = favorite._doc;
+    res.status(200).json(other);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 
 module.exports = router;

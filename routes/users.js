@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/User");
+const Group = require("../models/Group");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 
@@ -91,6 +92,39 @@ router.get("/friends/:userId", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+//GET ALL MEMBERS OF GROUP
+router.get("/membersGroup", async (req, res) => {
+  try {
+    const groupId = req.query.groupId;
+    if (!groupId) {
+      return res.status(400).json({ message: "Group ID is required" });
+    }
+    const group = await Group.findById(groupId);
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+    const members = group.membersOfGroup;
+    const userMap = {};
+    for (const member of members) {
+      const user = await User.findById(member);
+      if (user) {
+        userMap[user._id] = user;
+      }
+    }
+    const usersList = Object.values(userMap).map((user) => {
+      const { _id, username, profilePicture, role } = user;
+      return { _id, username, profilePicture, role };
+    });
+    res.status(200).json(usersList);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
+
 
 //follow user
 router.put("/:id/addToGroup", async (req, res) => {
