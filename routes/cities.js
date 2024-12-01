@@ -28,16 +28,6 @@ router.put("/:id/update", async (req, res) => {
   }
 });
 
-// //GET
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const city = await City.findById(req.params.id);
-//     res.status(200).json(city);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
-
 //DELETE
 router.delete("/:id/delete", async (req, res) => {
   try {
@@ -80,6 +70,29 @@ router.get("/allCities", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+
+// GET ALL CITIES BY REGION
+router.get("/regionCities", async (req, res) => {
+  const regionId = req.query.regionId;
+  if (!regionId) {
+    return res.status(400).json({ message: "regionId is required" });
+  }
+  try {
+    const cities = await City.find({ regionId: regionId });
+    if (!cities) {
+      return res.status(404).json({ message: "Cities not found" });
+    }
+    let citiesData = cities.map((city) => {
+      return { _id: city._id, locationName: city.locationName, locationPictures: city.locationPictures };
+    });
+    res.status(200).json(citiesData);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+
 });
 
 module.exports = router;

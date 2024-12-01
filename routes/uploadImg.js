@@ -97,7 +97,7 @@ const optimizeImage = (imagePath) => {
       .resize(800, 600)
       .png({
         compressionLevel: 9,
-        // quality: 80,
+       // quality: 80,//TODO fix misloaded images
         adaptiveFiltering: true,
         force: true,
       })

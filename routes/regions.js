@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Region = require("../models/Region");
+const Country = require("../models/Country");
 
 //CREATE 
 router.post("/", async (req, res) => {
@@ -28,15 +29,6 @@ router.put("/:id/update", async (req, res) => {
   }
 });
 
-// //GET
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const region = await Region.findById(req.params.id);
-//     res.status(200).json(region);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
 
 //DELETE
 router.delete("/:id/delete", async (req, res) => {
@@ -72,13 +64,34 @@ router.delete("/:id/picture/delete", async (req, res) => {
 
 
 
-//GET ALL COUNTRIES
+// GET ALL REGIONS
 router.get("/allRegions", async (req, res) => {
   try {
     const regions = await Region.find();
     res.status(200).json(regions);
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+
+// GET ALL REGIONS OF A COUNTRY
+router.get("/countryRegions", async (req, res) => {
+  const countryISO3 = req.query.countryIsoCode_3;
+  if (!countryISO3) {
+    return res.status(400).json({ message: "countryISO is required" });
+  }
+  try {
+    const regions = await Region.find({ countryIsoCode_3: countryISO3 });
+    if (!regions) {
+      return res.status(404).json({ message: "Regions not found" });
+    }
+    let regionsData = regions.map((region) => {
+      return { _id: region._id, locationName: region.locationName, locationPictures: region.locationPictures };
+    });
+    res.status(200).json(regionsData);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 

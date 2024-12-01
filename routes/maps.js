@@ -28,16 +28,6 @@ router.put("/:id/update", async (req, res) => {
   }
 });
 
-// //GET
-// router.get("/:id", async (req, res) => {
-//   try {
-//     const map = await Map.findById(req.params.id);
-//     res.status(200).json(map);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
-
 //DELETE
 router.delete("/:id", async (req, res) => {
   try {
@@ -98,5 +88,15 @@ router.get("/allMaps", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+// //GET
+// router.get("/:id", async (req, res) => {
+//   try {
+//     const map = await Map.findById(req.params.id);
+//     res.status(200).json(map);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 module.exports = router;
