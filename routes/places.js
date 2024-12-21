@@ -17,12 +17,16 @@ router.post("/", async (req, res) => {
 // update a place
 router.put("/:id", async (req, res) => {
   try {
+    const user = await User.findById(req.body.userId);
     const place = await Place.findById(req.params.id);
     if (place.userId === req.body.userId) {
       await place.updateOne({ $set: req.body });
-      res.status(200).json("The place has been updated");
+      res.status(200).json("The place has been updated by owner");
+    } else if (user.isAdmin || user.role === "0" || user.role === "007") {
+      await place.updateOne({ $set: req.body });
+      res.status(200).json("The place has been updated by admin");
     } else {
-      res.status(403).json("You can update only your place");
+      res.status(403).json("If you not the admin you can update only your place");
     }
   } catch (err) {
     res.status(500).json(err);
