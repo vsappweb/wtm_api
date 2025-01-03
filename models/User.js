@@ -7,6 +7,12 @@ const UserSchema = new mongoose.Schema(
       min: 3,
       max: 20,
     },
+    dateOfBirth: {
+      type: String,
+    },
+    sex: {
+      type: String,
+    },
     language: {
       type: String,
     },
