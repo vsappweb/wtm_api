@@ -24,6 +24,7 @@ const path = require("path");
 const cors = require("cors");
 const port = process.env.PORT || 8800;
 const ws_port = process.env.WS_PORT || 8900;
+const cors_env = process.env.REACT_APP_ORIGIN;
 
 dotenv.config();
 
@@ -97,8 +98,9 @@ if (process.env.NODE_ENV_LOG === "production") {
   }
 }
 
-const wss = new ws.Server({ port: ws_port }, () => {
-  console.log(`WebSocket Server is running on ws://localhost:${ws_port}`);
+const wss = new ws.Server({ port: ws_port, cors: { origin: cors_env } }, () => {
+  console.log(`WebSocket Server is running  on port ${ws_port}`);
+  
 });
 
 wss.on("connection", (ws) => {

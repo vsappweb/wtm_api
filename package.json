@@ -15,8 +15,7 @@
     "start": "nodemon index.js",
     "api": "nodemon index.js",
     "client": "npm run start --prefix ../client",
-    "socket": "npm run start --prefix ../socket",
-    "dev": "concurrently \"npm run api\" \"npm run client\" \"npm run socket\""
+    "dev": "concurrently \"npm run api\" \"npm run client\""
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
