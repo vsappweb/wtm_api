@@ -69,9 +69,9 @@ wss.on("connection", (ws) => {
 
 function broadcastMessage(message) {
   wss.clients.forEach((client) => {
-    if (client.readyState === ws.OPEN) {
+    // if (client.readyState === wss.OPEN) {
       client.send(JSON.stringify(message));
-    }
+    // }
   });
 }
 
@@ -123,6 +123,7 @@ app.get("", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}!!!`);
 });
+
 
 if (process.env.NODE_ENV_LOG === "production") {
   console.log("production");
