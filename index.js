@@ -98,10 +98,19 @@ if (process.env.NODE_ENV_LOG === "production") {
   }
 }
 
-const wss = new ws.Server({ port: ws_port, cors: { origin: cors_env } }, () => {
-  console.log(`WebSocket Server is running  on port ${ws_port}`);
-  
-});
+const wss = new ws.Server(
+  {
+    port: ws_port,
+    cors: { origin: cors_env, credentials: true, methods: ["GET", "POST"] },
+  },
+  () => {
+    if (wss) {
+      console.log(`WebSocket Server is running  on port ${ws_port}`);
+    } else {
+      console.error("Error creating WebSocket Server");
+    }
+  }
+);
 
 wss.on("connection", (ws) => {
   console.log("Client connected");
