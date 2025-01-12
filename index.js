@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const ws = require("ws");
 const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
@@ -22,6 +23,7 @@ const util = require("util");
 const path = require("path");
 const cors = require("cors");
 const port = process.env.PORT || 8800;
+const ws_port = process.env.WS_PORT || 8900;
 
 dotenv.config();
 
@@ -93,4 +95,41 @@ if (process.env.NODE_ENV_LOG === "production") {
   } catch (err) {
     console.error("Error in setting up logging:", err);
   }
+}
+
+const wss = new ws.Server({ port: ws_port }, () => {
+  console.log(`WebSocket Server is running on ws://localhost:${ws_port}`);
+});
+
+wss.on("connection", (ws) => {
+  console.log("Client connected");
+  ws.on("message", (message) => {
+    console.log("Received message:", message);
+    message = JSON.parse(message);
+    switch (message.event) {
+      case "message":
+        broadcastMessage(message);
+        break;
+      case "connection":
+        broadcastMessage(message);
+        break;
+      case "disconnect":
+        broadcastMessage(message);
+        break;
+      default:
+        console.log("Invalid event type:", message.event);
+        break;
+    }
+  });
+  ws.on("close", () => {
+    console.log("Client disconnected");
+  });
+});
+
+function broadcastMessage(message) {
+  wss.clients.forEach((client) => {
+    if (client.readyState === ws.OPEN) {
+      client.send(JSON.stringify(message));
+    }
+  });
 }
