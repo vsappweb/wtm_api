@@ -101,7 +101,7 @@ if (process.env.NODE_ENV_LOG === "production") {
 const wss = new ws.Server(
   {
     port: ws_port,
-    cors: { origin: cors_env, credentials: true, methods: ["GET", "POST"] },
+    cors: { origin: "*" },
   },
   () => {
     if (wss) {
