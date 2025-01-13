@@ -17,6 +17,8 @@ const groupRoute = require("./routes/groups");
 const deleteImg = require("./routes/deleteImg");
 const uploadImg = require("./routes/uploadImg");
 const favoriteRoute = require("./routes/favorites");
+const groupRoomRoute = require("./routes/groupRooms");
+const messageRoute = require("./routes/messages");
 
 const fs = require("fs");
 const util = require("util");
@@ -114,6 +116,8 @@ app.use("/api/v1/groups", groupRoute);
 app.use("/api/v1/deleteImg", deleteImg);
 app.use("/api/v1/uploadImg", uploadImg);
 app.use("/api/v1/favorites", favoriteRoute);
+app.use("/api/v1/groupRooms", groupRoomRoute);
+app.use("/api/v1/messages", messageRoute);
 
 app.get("", (req, res) => {
   res.send(`Welcome to WTM ${process.env.NODE_ENV_LOG} server!!!`);
