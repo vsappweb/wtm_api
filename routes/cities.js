@@ -85,7 +85,7 @@ router.get("/regionCities", async (req, res) => {
       return res.status(404).json({ message: "Cities not found" });
     }
     let citiesData = cities.map((city) => {
-      return { _id: city._id, locationName: city.locationName, locationPictures: city.locationPictures };
+      return { _id: city._id, locationName: city.locationName, locationPictures: city.locationPictures, regionId: city.regionId };
     });
     res.status(200).json(citiesData);
   } catch (err) {
