@@ -8,6 +8,9 @@ const AiDialogueSchema = new mongoose.Schema(
     userId: {
       type: String,
     },
+    initId: {
+      type: String,
+    },
     dialogueTitle: {
       type: String,
     },
