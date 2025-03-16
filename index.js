@@ -20,6 +20,7 @@ const favoriteRoute = require("./routes/favorites");
 const messageRoute = require("./routes/messages");
 const coordinatesRoute = require("./routes/coordinates");
 const aiDialogueRoute = require("./routes/aiDialogues");
+const notesRoute = require("./routes/notes");
 
 const fs = require("fs");
 const util = require("util");
@@ -120,6 +121,7 @@ app.use("/api/v1/favorites", favoriteRoute);
 app.use("/api/v1/messages", messageRoute);
 app.use("/api/v1/coordinates", coordinatesRoute);
 app.use("/api/v1/aiDialogues", aiDialogueRoute);
+app.use("/api/v1/notes", notesRoute);
 
 app.get("", (req, res) => {
   res.send(`Welcome to WTM ${process.env.NODE_ENV_LOG} server!!!`);
