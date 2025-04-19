@@ -16,11 +16,14 @@
     "api": "nodemon index.js",
     "client": "npm run start --prefix ../client",
     "socket": "npm run start --prefix ../socket",
-    "dev": "concurrently \"npm run api\" \"npm run client\" \"npm run socket\""
+    "ollama": "cross-env OLLAMA_ORIGINS=chrome-extension://* ollama serve",
+    "dev": "concurrently -n OLLAMA,API,CLIENT,SOCKET -c cyan.italic,yellow.bold,green.bold,magenta.strikethrough \"yarn ollama\" \"npm run api\" \"npm run client\" \"npm run socket\"",
+    "dev_no_ollama": "concurrently -n API,CLIENT,SOCKET -c yellow,green,magenta \"npm run api\" \"npm run client\" \"npm run socket\""
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",
     "express": "^4.21.1",
     "global": "^4.4.0",
